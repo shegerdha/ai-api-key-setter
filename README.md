@@ -1,11 +1,13 @@
 # ai-api-key-setter
 
-ابزار ویندوزی (PySide6) برای تنظیم Claude Code و Codex روی gateway دلخواه (مثل Agent Router).
+ابزار ویندوزی (PySide6) برای تنظیم Claude Code، Codex و Cursor روی gateway دلخواه (مثل Agent Router).
 
-**نسخه فعلی:** 1.5  
+**نسخه فعلی:** 1.7  
 **مجوز:** MIT — [`LICENSE`](LICENSE)
 
 ---
+
+در تب Cursor، پیش از ذخیره Cursor را کاملاً ببندید. ذخیره در پس‌زمینه انجام می‌شود و تا پایان، رابط با Overlay قفل می‌ماند؛ سپس Cursor را دوباره باز کنید.
 
 ## پیش‌نیاز
 

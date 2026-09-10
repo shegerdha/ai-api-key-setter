@@ -12,7 +12,10 @@ a = Analysis(
         ('assets/icons/app-icon.ico', 'assets/icons'),
         ('assets/icons/chevron-down.svg', 'assets/icons'),
     ],
-    hiddenimports=[],
+    hiddenimports=[
+        "cryptography",
+        "cryptography.hazmat.primitives.ciphers.aead",
+    ],
     hookspath=[],
     hooksconfig={},
     runtime_hooks=[],

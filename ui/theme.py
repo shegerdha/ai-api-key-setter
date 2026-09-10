@@ -88,11 +88,12 @@ QTabBar::tab:selected {
     font-weight: 600;
     border-bottom: 2px solid #2563eb;
 }
-QWidget#claudeTab {
+QWidget#claudeTab, QWidget#cursorTab {
     background-color: #ffffff;
 }
 QWidget#logTab, QWidget#aboutPanel, QWidget#codexTab, QWidget#codexPanel, QWidget#helpTab,
-QWidget#claudeTabScroll, QWidget#helpContent, QWidget#aboutContent, QWidget#guideDocument {
+QWidget#claudeTabScroll, QWidget#cursorTabScroll, QWidget#helpContent, QWidget#aboutContent,
+QWidget#guideDocument {
     background-color: #ffffff;
 }
 QScrollArea#appScroll {

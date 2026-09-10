@@ -91,11 +91,12 @@ def build_about_body(version: str) -> str:
     نسخه <span style="color:#2563eb; font-weight:600;">{safe_version}</span>
   </p>
   <p style="margin:0 0 10px 0; font-weight:600; color:#0f172a;">
-    ابزار portable برای تنظیم Claude Code و Codex CLI روی Windows
+    ابزار portable برای تنظیم Claude Code، Codex CLI و Cursor روی Windows
   </p>
   <p style="margin:0 0 8px 0; color:#475569;">
     اتصال به gateway دلخواه (مثل Agent Router) بدون ویرایش دستی فایل‌ها:
-    env کاربر، تنظیمات Claude/Codex، افزونه Codex در Cursor/VS Code،
+    env کاربر، تنظیمات Claude/Codex، کلید و مدل‌های خود Cursor،
+    افزونه Codex در Cursor/VS Code، پروفایل چندکلیده،
     نصب npm در صورت نیاز، و باز کردن ترمینال coach برای اجرای <code>claude</code> / <code>codex</code>.
   </p>
   <p style="margin:14px 0 0 0; color:#64748b; font-size:9pt;">

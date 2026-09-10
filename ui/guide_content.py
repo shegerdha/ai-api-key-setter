@@ -18,7 +18,7 @@ def build_help_document() -> GuideDocument:
         hero=HeroBlock(
             title="راهنمای استفاده",
             subtitle=(
-                "از صفر تا صد: راه‌اندازی Claude Code و Codex با gateway دلخواه "
+                "از صفر تا صد: راه‌اندازی Claude Code، Codex و Cursor با gateway دلخواه "
                 "— قدم‌به‌قدم و به زبان ساده."
             ),
             accent="#7c3aed",
@@ -35,8 +35,10 @@ def build_help_document() -> GuideDocument:
                             "و برنامه به‌جای تو env ویندوز و فایل‌های پیکربندی را می‌نویسد.",
                             "برای Claude Code: settings.json و متغیرهای ANTHROPIC_*",
                             "برای Codex: config.toml، auth.json و تنظیمات Cursor/VS Code",
+                            "برای خود Cursor: کلید OpenAI، Base URL و ثبت مدل در لیست مدل‌ها",
+                            "پروفایل اتصال: چند توکن را نگه می‌داری و بینشان سوییچ می‌کنی.",
                             "مسیر اتصال Codex (مستقیم، relay یا legacy) را خودکار انتخاب می‌کند.",
-                            "هدف: بدون ویرایش دستی فایل‌ها، هر دو ابزار به gateway وصل شوند.",
+                            "هدف: بدون ویرایش دستی فایل‌ها، ابزارها به gateway وصل شوند.",
                         ],
                         tone="info",
                     ),
@@ -105,6 +107,46 @@ def build_help_document() -> GuideDocument:
                         [
                             "Agent Router گاهی /models را برای کلاینت‌های عمومی رد می‌کند؛ Claude CLI کار می‌کند.",
                         ],
+                    ),
+                ],
+            ),
+            GuideSection(
+                title="پروفایل اتصال",
+                cards=[
+                    CardBlock(
+                        "چند کلید، بدون ورود دوباره",
+                        [
+                            "بالای تب Claude، Codex و Cursor یک نوار پروفایل هست.",
+                            "با «ذخیره» توکن همان پروفایل برای همیشه نگه داشته می‌شود.",
+                            "«جدید» پروفایل تازه می‌سازد؛ سوییچ فرم را پر می‌کند و روی سیستم اعمال می‌کند.",
+                            "دیگر لازم نیست هر بار کلید را دوباره بچسبانی — فقط پروفایل را عوض کن.",
+                        ],
+                        tone="info",
+                    ),
+                ],
+            ),
+            GuideSection(
+                title="تب Cursor",
+                cards=[
+                    CardBlock(
+                        "مراحل",
+                        [
+                            "توکن و آدرس gateway را وارد کن",
+                            "مدلی را انتخاب کن که باید در لیست مدل Cursor ظاهر شود",
+                            "در صورت نیاز تیک ثبت مدل‌های پیش‌فرض را بگذار",
+                            "Cursor را کاملاً ببند و «ذخیره در Cursor» را بزن",
+                            "Cursor را دوباره باز کن",
+                            "مدل را از picker چت انتخاب کن — Auto را خاموش کن",
+                        ],
+                        tone="info",
+                    ),
+                    CardBlock(
+                        "نکته",
+                        [
+                            "ذخیره فقط وقتی Cursor کاملاً بسته است انجام می‌شود؛ Reload کافی نیست.",
+                            "اگر نام مدل با مدل داخلی Cursor یکی باشد، ممکن است از مسیر اشتراکی Cursor برود نه gateway.",
+                        ],
+                        tone="warn",
                     ),
                 ],
             ),
@@ -200,7 +242,11 @@ def build_help_document() -> GuideDocument:
                         ),
                         (
                             "توکن کجا ذخیره می‌شود؟",
-                            "env کاربر Windows، auth.json و گاهی اسکریپت coach — فقط روی سیستم شما.",
+                            "env کاربر Windows، auth.json، پروفایل‌های برنامه و گاهی اسکریپت coach — فقط روی سیستم شما.",
+                        ),
+                        (
+                            "مدل در Cursor دیده نمی‌شود؟",
+                            "Cursor را پیش از ذخیره ببند و بعد دوباره باز کن. مدل باید با شناسهٔ دقیق gateway ثبت شده باشد.",
                         ),
                     ]
                 ),

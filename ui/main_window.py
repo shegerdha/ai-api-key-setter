@@ -8,6 +8,7 @@ from PySide6.QtWidgets import QMainWindow, QTabWidget, QVBoxLayout, QWidget
 from ui.about_tab import AboutTab
 from ui.claude_tab import ClaudeTab
 from ui.codex_tab import CodexTab
+from ui.cursor_tab import CursorTab
 from ui.help_tab import HelpTab
 from ui.log_tab import LogTab
 
@@ -33,6 +34,7 @@ class MainWindow(QMainWindow):
         claude_tab = ClaudeTab()
         tabs.addTab(claude_tab, "Claude Code")
         tabs.addTab(CodexTab(), "Codex")
+        tabs.addTab(CursorTab(), "Cursor")
         tabs.addTab(log_tab, "گزارش")
         tabs.addTab(HelpTab(), "راهنما")
         tabs.addTab(AboutTab(), "درباره")

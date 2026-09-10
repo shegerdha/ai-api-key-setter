@@ -26,10 +26,12 @@ from services.claude_config import (
 )
 from services.app_prefs import get_pref, update_prefs
 from services.env_manager import apply_claude_env, broadcast_env_change, read_claude_env
+from services.profiles import KIND_CLAUDE
 from services.gateway_client import fallback_models, fetch_models
 from services.npm_installer import detect_installation, install_claude_code
 from services.terminal_launcher import TerminalKind, launch_claude_interactive
 from ui.log_hub import append as log_append
+from ui.profile_bar import ProfileBar
 from ui.scroll_area import create_app_scroll_area
 from ui.widgets import ArrowComboBox, MaskedTokenEdit
 
@@ -81,6 +83,7 @@ class ClaudeTab(QWidget):
         self._load_ui_prefs()
         self._load_current_state()
         self._wire_pref_persistence()
+        self.profile_bar.load_active_into_form()
 
     def _field_row(self, field: QWidget, *buttons: QWidget) -> QHBoxLayout:
         row = QHBoxLayout()
@@ -139,6 +142,18 @@ class ClaudeTab(QWidget):
         )
         root.setContentsMargins(8, 8, 8, 8)
         root.setSpacing(8)
+
+        self.profile_bar = ProfileBar(
+            KIND_CLAUDE,
+            get_fields=self._profile_fields,
+            set_fields=self._apply_profile_fields,
+            apply_fields=lambda: self._save_settings(silent=True),
+            default_name="Agent Router",
+        )
+        self.profile_bar.applied.connect(
+            lambda: self._append_log("پروفایل Claude روی سیستم اعمال شد.")
+        )
+        root.addWidget(self.profile_bar)
 
         config_group = QGroupBox("اتصال Gateway")
         config_group.setAlignment(Qt.AlignmentFlag.AlignRight)
@@ -409,6 +424,37 @@ class ClaudeTab(QWidget):
 
         self._append_log("تنظیمات فعلی سیستم بارگذاری شد.")
 
+    def _profile_fields(self) -> dict:
+        return {
+            "token": self.token_edit.text(),
+            "gateway_url": self.gateway_url.text().strip(),
+            "model": self._selected_model_id(),
+            "model_alias": self.model_alias.text().strip(),
+            "working_dir": self.working_dir.text().strip(),
+        }
+
+    def _apply_profile_fields(self, fields: dict) -> None:
+        token = str(fields.get("token") or "")
+        if token:
+            self.token_edit.setText(token)
+        gateway = str(fields.get("gateway_url") or "")
+        if gateway:
+            self.gateway_url.setText(gateway)
+        model = str(fields.get("model") or "")
+        if model:
+            idx = self.model_combo.findData(model)
+            if idx >= 0:
+                self.model_combo.setCurrentIndex(idx)
+                self._sync_custom_model_field(False)
+            else:
+                self._select_custom_model(model)
+        alias = str(fields.get("model_alias") or "")
+        if alias:
+            self.model_alias.setText(alias)
+        workdir = str(fields.get("working_dir") or "")
+        if workdir:
+            self.working_dir.setText(workdir)
+
     def _selected_model_id(self) -> str:
         data = self.model_combo.currentData()
         if data == CUSTOM_MODEL_KEY:
@@ -460,6 +506,7 @@ class ClaudeTab(QWidget):
 
         self.model_alias.setText(alias)
         self._save_ui_prefs()
+        self.profile_bar.persist_or_create(self._profile_fields())
         model_note = " (مدل دلخواه)" if self._is_custom_model_selected() else ""
         self._append_log(
             f"ذخیره شد:\n"

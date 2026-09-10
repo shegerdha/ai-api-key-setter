@@ -45,6 +45,7 @@ from services.codex_routing import (
 )
 from services.gateway_client import fallback_models, fetch_models
 from services.ide_codex_settings import apply_chatgpt_settings, restore_chatgpt_settings
+from services.profiles import KIND_CODEX
 from services.npm_installer import (
     codex_needs_legacy_pin,
     detect_codex_installation,
@@ -52,6 +53,7 @@ from services.npm_installer import (
 )
 from services.terminal_launcher import TerminalKind, launch_codex_interactive
 from ui.log_hub import append as log_append
+from ui.profile_bar import ProfileBar
 from ui.scroll_area import create_app_scroll_area
 from ui.widgets import ArrowComboBox, MaskedTokenEdit
 
@@ -101,6 +103,7 @@ class CodexTab(QWidget):
         self._load_ui_prefs()
         self._load_current_state()
         self._wire_pref_persistence()
+        self.profile_bar.load_active_into_form()
 
     def _field_row_widget(self, field: QWidget, *buttons: QWidget) -> QWidget:
         row = QWidget()
@@ -158,6 +161,18 @@ class CodexTab(QWidget):
         )
         root.setContentsMargins(8, 8, 8, 8)
         root.setSpacing(8)
+
+        self.profile_bar = ProfileBar(
+            KIND_CODEX,
+            get_fields=self._profile_fields,
+            set_fields=self._apply_profile_fields,
+            apply_fields=lambda: self._save_settings(silent=True),
+            default_name="Agent Router",
+        )
+        self.profile_bar.applied.connect(
+            lambda: self._append_log("پروفایل Codex روی سیستم اعمال شد.")
+        )
+        root.addWidget(self.profile_bar)
 
         config_group = QGroupBox("اتصال Gateway")
         config_group.setAlignment(Qt.AlignmentFlag.AlignRight)
@@ -474,6 +489,33 @@ class CodexTab(QWidget):
         self._refresh_relay_status()
         self._append_log("تنظیمات Codex از سیستم بارگذاری شد.")
 
+    def _profile_fields(self) -> dict:
+        return {
+            "token": self.token_edit.text(),
+            "gateway_url": self.gateway_url.text().strip(),
+            "model": self._selected_model_id(),
+            "working_dir": self.working_dir.text().strip(),
+        }
+
+    def _apply_profile_fields(self, fields: dict) -> None:
+        token = str(fields.get("token") or "")
+        if token:
+            self.token_edit.setText(token)
+        gateway = str(fields.get("gateway_url") or "")
+        if gateway:
+            self.gateway_url.setText(gateway)
+        model = str(fields.get("model") or "")
+        if model:
+            idx = self.model_combo.findData(model)
+            if idx >= 0:
+                self.model_combo.setCurrentIndex(idx)
+                self._sync_custom_model_field(False)
+            else:
+                self._select_custom_model(model)
+        workdir = str(fields.get("working_dir") or "")
+        if workdir:
+            self.working_dir.setText(workdir)
+
     def _selected_model_id(self) -> str:
         data = self.model_combo.currentData()
         if data == CUSTOM_MODEL_KEY:
@@ -551,6 +593,7 @@ class CodexTab(QWidget):
         ide_logs = apply_chatgpt_settings(base_url_v1)
 
         self._save_ui_prefs()
+        self.profile_bar.persist_or_create(self._profile_fields())
         self._refresh_relay_status()
         model_note = " (مدل دلخواه)" if self._is_custom_model_selected() else ""
         relay_line = f"- relay: {relay_msg}\n" if relay_msg else ""

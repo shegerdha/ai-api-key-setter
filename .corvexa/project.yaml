@@ -1,0 +1,14 @@
+contract_version: "1"
+project_id: ai-api-key-setter
+display_name: ai-api-key-setter
+kind: PROJECT
+corvexa_logical_id: corvexa-default
+manifest_revision: 1
+visibility: org
+discovery:
+  work_item_tags: [ai-api-key-setter, cursor]
+  related_playbooks: []
+links:
+  docs: README.md
+authority_note: "Original for project identity; Runtime remains in Corvexa."
+updated_at: "2026-09-10T02:08:18+03:30"
